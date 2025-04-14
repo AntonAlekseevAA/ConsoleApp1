@@ -2,16 +2,16 @@
 {
     internal class ProgramTest
     {
-        static object locker = new object();
+        // static object locker = new object();
         static async Task Main(string[] args)
         {
             var transferHepler = new TransferHelper();
 
-            var accountOne = new Account();
-            accountOne.Amount = 1000;
+            var accountOne = new Account(1000);
+            // accountOne.Amount = 1000;
 
-            var accountTwo = new Account();
-            accountTwo.Amount = 250;
+            var accountTwo = new Account(250);
+            // accountTwo.Amount = 250;
 
             /*var tasks = new Task[100];
 
@@ -33,11 +33,13 @@
                 var thread = new Thread(() =>
                 {
                     Thread.Sleep(1000);
-                    lock (locker)
+                    /*lock (locker)
                     {
-                        transferHepler.Transfer(accountOne, accountTwo, 10);
-                        Console.WriteLine($@"Balance of account A is {accountOne.Amount}, balance of account B is {accountTwo.Amount}");
-                    }
+                        
+                    }*/
+
+                    transferHepler.Transfer(accountOne, accountTwo, 10);
+                    Console.WriteLine($@"Balance of account A is {accountOne.Amount}, balance of account B is {accountTwo.Amount}");
                 });
                 thread.IsBackground = true;
 

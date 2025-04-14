@@ -8,16 +8,40 @@ namespace ConsoleApp1
 {
     public class TransferHelper
     {
-        private readonly object _locker = new object();
+        // private readonly object _locker = new object();
 
         public void Transfer(Account a, Account b, decimal amount)
         {
-            lock (_locker)
+            if (a.Id < b.Id)
             {
-                a.Amount -= amount;
-                b.Amount += amount;
-                // Console.WriteLine($@"Balance of account A is {a.Amount}, balance of account B is {b.Amount}");
+                Monitor.Enter(a.m_balanceLock); // A first
+                Monitor.Enter(b.m_balanceLock); // then B
             }
+            else
+            {
+                Monitor.Enter(b.m_balanceLock); // B first
+                Monitor.Enter(a.m_balanceLock); // then A
+            }
+
+            try
+            {
+                a.Withdraw(amount);
+                b.Deposit(amount);
+            }
+            finally
+            {
+                Monitor.Exit(a.m_balanceLock);
+                Monitor.Exit(b.m_balanceLock);
+            }
+
+
+            /*lock (_locker)
+            {
+                
+                 a.Amount -= amount;
+                 b.Amount += amount;
+                 // Console.WriteLine($@"Balance of account A is {a.Amount}, balance of account B is {b.Amount}");
+            }*/
         }
     }
 }
