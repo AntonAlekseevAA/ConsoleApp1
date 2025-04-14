@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace TransferLib
 {
     public class Account
     {
-        public Account(decimal amount)
+        public Account(decimal amount, int id)
         {
             m_amount = amount;
+            Id = id;
         }
 
         public decimal Amount => m_amount;
@@ -20,24 +21,24 @@ namespace ConsoleApp1
         public object m_balanceLock = new object();
         public int Id { get; set; } // Unique bank account ID
 
-        public void Deposit(decimal delta)
+        public void Deposit(decimal amount)
         {
             lock (m_balanceLock)
             {
-                m_amount += delta;
+                m_amount += amount;
             }
         }
 
-        public void Withdraw(decimal delta)
+        public void Withdraw(decimal amount)
         {
-            lock(m_balanceLock)
+            lock (m_balanceLock)
             {
-                if (m_amount < delta)
+                if (m_amount < amount)
                 {
                     throw new Exception("Insufficient funds");
                 }
 
-                m_amount -= delta;
+                m_amount -= amount;
             }
         }
     }

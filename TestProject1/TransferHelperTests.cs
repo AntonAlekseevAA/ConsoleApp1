@@ -1,13 +1,16 @@
-﻿namespace ConsoleApp1
+using TransferLib;
+
+namespace TransferHelperTests
 {
-    internal class ProgramTest
+    public class TransferHelperTests
     {
-        static async Task Main(string[] args)
+        [Fact]
+        public void Transfer_ShouldTransferExactAmountInManyThreads()
         {
             var transferHepler = new TransferHelper();
 
-            var accountOne = new Account(1000);
-            var accountTwo = new Account(250);
+            var accountOne = new Account(1000, 1);
+            var accountTwo = new Account(250, 2);
 
             const int threadsCount = 100;
             var threads = new List<Thread>();
@@ -26,9 +29,8 @@
 
             threads.ForEach(thread => thread.Start());
             threads.ForEach(thread => thread.Join());
-            Console.WriteLine($@"Balance of account A is {accountOne.Amount}, balance of account B is {accountTwo.Amount}");
-            Console.WriteLine($@"Balance of account A is 0: {accountOne.Amount == 0}, balance of account B is 1250: {accountTwo.Amount == 1250}");
-            Console.ReadKey();
+            Assert.Equal(0, accountOne.Amount);
+            Assert.Equal(1250, accountTwo.Amount);
         }
     }
 }
